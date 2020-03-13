@@ -210,6 +210,13 @@ static ngx_command_t ngx_http_vhost_traffic_status_commands[] = {
       offsetof(ngx_http_vhost_traffic_status_loc_conf_t, bypass_stats),
       NULL },
 
+    { ngx_string("vhost_traffic_status_prometheus_illegal_symbols"),
+      NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
+      ngx_conf_set_str_slot,
+      NGX_HTTP_LOC_CONF_OFFSET,
+      offsetof(ngx_http_vhost_traffic_status_loc_conf_t, prometheus_illegal_symbols),
+      NULL },
+
     ngx_null_command
 };
 
@@ -889,6 +896,7 @@ ngx_http_vhost_traffic_status_create_loc_conf(ngx_conf_t *cf)
      *     conf->histogram_buckets = { NULL, ... };
      *     conf->bypass_limit = 0;
      *     conf->bypass_stats = 0;
+     *     conf->prometheus_illegal_symbols = { 0, NULL };
      */
 
     conf->shm_zone = NGX_CONF_UNSET_PTR;
@@ -1018,6 +1026,9 @@ ngx_http_vhost_traffic_status_merge_loc_conf(ngx_conf_t *cf, void *parent, void 
 
     ngx_conf_merge_value(conf->bypass_limit, prev->bypass_limit, 0);
     ngx_conf_merge_value(conf->bypass_stats, prev->bypass_stats, 0);
+
+    ngx_conf_merge_str_value(conf->prometheus_illegal_symbols, prev->prometheus_illegal_symbols,
+                                 NGX_HTTP_VHOST_TRAFFIC_STATUS_DEFAULT_PROMETHEUS_ILLEGAL_SYMBOLS);
 
     name = ctx->shm_name;
 

@@ -198,6 +198,17 @@ ngx_http_vhost_traffic_status_display_prometheus_set_filter_node(
 
     vtscf = ngx_http_get_module_loc_conf(r, ngx_http_vhost_traffic_status_module);
 
+     //Substitute illegal prometheus symbols in key->data to ' '
+     if (vtscf->prometheus_illegal_symbols.data != NULL && vtscf->prometheus_illegal_symbols.len > 0)
+     {
+        u_char *p;
+        for (unsigned int i=0; i < vtscf->prometheus_illegal_symbols.len; i++) {
+          while ((p = (u_char *)ngx_strchr ((char *)key->data, vtscf->prometheus_illegal_symbols.data[i])) != NULL)
+                   *p++ = ' ';
+        }
+     }
+     //
+
     filter = filter_name = *key;
 
     (void) ngx_http_vhost_traffic_status_node_position_key(&filter, 1);

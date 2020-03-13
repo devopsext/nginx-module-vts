@@ -45,6 +45,9 @@
 #define NGX_HTTP_VHOST_TRAFFIC_STATUS_DEFAULT_AVG_PERIOD   60
 #define NGX_HTTP_VHOST_TRAFFIC_STATUS_DEFAULT_DUMP_PERIOD  60
 
+#define NGX_HTTP_VHOST_TRAFFIC_STATUS_DEFAULT_PROMETHEUS_ILLEGAL_SYMBOLS "" //Just to disable checks by default
+
+
 #define ngx_http_vhost_traffic_status_add_rc(s, n) {                           \
     if(s < 200) {n->stat_1xx_counter++;}                                       \
     else if(s < 300) {n->stat_2xx_counter++;}                                  \
@@ -288,6 +291,9 @@ typedef struct {
     ngx_flag_t                              bypass_stats;
 
     ngx_rbtree_node_t                     **node_caches;
+
+    //For proemtheus labels cleanup
+    ngx_str_t                              prometheus_illegal_symbols;
 } ngx_http_vhost_traffic_status_loc_conf_t;
 
 
